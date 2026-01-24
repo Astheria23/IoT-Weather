@@ -25,9 +25,9 @@ export const AuthProvider = ({ children }) => {
     const interceptorId = api.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 401) {
-          logout();
-        }
+        // Jangan langsung auto-logout di setiap 401.
+        // Biarkan komponen yang manggil API menangani error ini,
+        // supaya token tidak hilang tiba-tiba saat sedang debug / token masih valid.
         return Promise.reject(error);
       },
     );
