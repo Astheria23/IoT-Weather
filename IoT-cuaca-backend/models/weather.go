@@ -8,6 +8,7 @@ type WeatherData struct {
 	RainLevel float64     `json:"rain_level" bson:"rain_level"`
 	WindSpeed float64     `json:"wind_speed" bson:"wind_speed"`
 	CreatedAt time.Time   `json:"created_at" bson:"created_at"`
+	Humidity  float64     `json:"humidity" bson:"humidity"`
 }
 
 type User struct {

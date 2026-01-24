@@ -27,6 +27,10 @@ const Dashboard = () => {
     () => data.map((item) => item.wind_speed ?? 0),
     [data],
   );
+  const humiditySeries = useMemo(
+    () => data.map((item) => item.humidity ?? 0),
+    [data],
+  );
 
   const latest = data.length ? data[data.length - 1] : null;
 
@@ -77,7 +81,7 @@ const Dashboard = () => {
 
             {/* Right: metrics + charts (data nyata) */}
             <div className="col-span-2">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
                 <StatPill
                   icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/></svg>}
                   value={latest ? `${latest.temp ?? '-'} °C` : '-'}
@@ -87,6 +91,11 @@ const Dashboard = () => {
                   icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 017 7c0 7-7 13-7 13S5 16 5 9a7 7 0 017-7z"/></svg>}
                   value={latest ? `${latest.rain_level ?? '-'} mm` : '-'}
                   label="Curah Hujan"
+                />
+                <StatPill
+                  icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2.5L7 10a5 5 0 1010 0l-5-7.5z" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                  value={latest ? `${latest.humidity ?? '-'} %` : '-'}
+                  label="Kelembapan"
                 />
                 <StatPill
                   icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3"/></svg>}
@@ -150,6 +159,19 @@ const Dashboard = () => {
               labels={labels}
               values={tempSeries}
               borderColor="#3b82f6"
+              height="h-80"
+              fillArea={true}
+            />
+          </div>
+
+          {/* Data Kelembapan full width */}
+          <div className="mt-6">
+            <div className="text-sm text-slate-500 mb-3">Data Nyata - Kelembapan</div>
+            <MetricChart
+              title="Perubahan Kelembapan"
+              labels={labels}
+              values={humiditySeries}
+              borderColor="#22c55e"
               height="h-80"
               fillArea={true}
             />
