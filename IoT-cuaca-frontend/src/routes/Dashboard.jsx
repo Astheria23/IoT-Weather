@@ -34,6 +34,12 @@ const Dashboard = () => {
 
   const latest = data.length ? data[data.length - 1] : null;
 
+  // waktu sekarang (real-time) untuk ditampilkan di stat "Waktu"
+  const nowLabel = useMemo(
+    () => new Date().toLocaleTimeString(),
+    [],
+  );
+
   return (
     <main className="min-h-screen bg-slate-100 text-slate-900 p-6">
       <div className="w-full">
@@ -99,7 +105,7 @@ const Dashboard = () => {
                 />
                 <StatPill
                   icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3"/></svg>}
-                  value={latest ? new Date(latest.created_at).toLocaleTimeString() : '-'}
+                  value={nowLabel}
                   label="Waktu"
                 />
               </div>
@@ -151,30 +157,63 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {/* Data Suhu full width di bawah data nyata */}
+          {/* Data Suhu & Kelembapan dalam satu chart */}
           <div className="mt-6">
-            <div className="text-sm text-slate-500 mb-3">Data Nyata - Suhu</div>
-            <MetricChart
-              title="Perubahan Suhu"
-              labels={labels}
-              values={tempSeries}
-              borderColor="#3b82f6"
-              height="h-80"
-              fillArea={true}
-            />
-          </div>
-
-          {/* Data Kelembapan full width */}
-          <div className="mt-6">
-            <div className="text-sm text-slate-500 mb-3">Data Nyata - Kelembapan</div>
-            <MetricChart
-              title="Perubahan Kelembapan"
-              labels={labels}
-              values={humiditySeries}
-              borderColor="#22c55e"
-              height="h-80"
-              fillArea={true}
-            />
+            <div className="text-sm text-slate-500 mb-3">Data Nyata - Suhu & Kelembapan</div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-80">
+              <Line
+                data={{
+                  labels,
+                  datasets: [
+                    {
+                      label: "Suhu (°C)",
+                      data: tempSeries,
+                      borderColor: "#3b82f6",
+                      backgroundColor: "#3b82f633",
+                      fill: true,
+                      tension: 0.3,
+                      pointRadius: 2,
+                      yAxisID: "y1",
+                    },
+                    {
+                      label: "Kelembapan (%)",
+                      data: humiditySeries,
+                      borderColor: "#22c55e",
+                      backgroundColor: "#22c55e33",
+                      fill: false,
+                      tension: 0.3,
+                      pointRadius: 2,
+                      yAxisID: "y2",
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { display: true },
+                  },
+                  scales: {
+                    x: {
+                      ticks: { color: "#64748b" },
+                      grid: { color: "#e5e7eb" },
+                    },
+                    y1: {
+                      type: "linear",
+                      position: "left",
+                      ticks: { color: "#3b82f6" },
+                      grid: { color: "#e5e7eb" },
+                    },
+                    y2: {
+                      type: "linear",
+                      position: "right",
+                      ticks: { color: "#22c55e" },
+                      grid: { drawOnChartArea: false },
+                    },
+                  },
+                }}
+              />
+            </div>
           </div>
           </>
         )}
