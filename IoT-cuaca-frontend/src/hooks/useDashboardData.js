@@ -35,9 +35,12 @@ export const useDashboardData = (interval = FALLBACK_INTERVAL) => {
     load();
     timerId = setInterval(load, interval);
 
-    // setup websocket for realtime updates
-    const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
-    const wsUrl = apiBase.replace(/^http/, "ws") + "/ws";
+  // setup websocket for realtime updates
+  // normalize base URL so we don't end up with double slashes when appending /ws
+  const rawBase = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  const httpBase = rawBase.replace(/\/+$/, "");
+  const wsBase = httpBase.replace(/^http/, "ws");
+  const wsUrl = `${wsBase}/ws`;
     try {
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
