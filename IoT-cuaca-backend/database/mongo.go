@@ -16,7 +16,7 @@ var DB *mongo.Database
 func ConnectDB() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
